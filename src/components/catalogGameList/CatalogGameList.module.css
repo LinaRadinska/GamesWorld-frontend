@@ -1,0 +1,18 @@
+.resultsWrapper {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-gap: 15px;
+    margin-bottom: 40px;
+}
+
+/* no results found message */
+
+.resultsMessage {
+    margin: 0px auto;
+    text-align: center;
+    width: 500px;
+}
+
+.resultsMessage .noResultsMsgDescription {
+    font-size: 18px;
+}

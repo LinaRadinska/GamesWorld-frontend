@@ -1,0 +1,37 @@
+.cartItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cartItemCover {
+    margin-right: 5px;
+}
+
+.cartItemName {
+    width: 130px;
+    margin-left: 5px;
+}
+
+.cartItemQuantity {
+    padding: 5px;
+    border: 1px solid #d53a9cd3;
+    border-radius: 4px;
+    cursor: default;
+}
+
+.decrBtn, .incrBtn {
+    color: white;
+    font-size: 12px;
+}
+
+.cartItemPrice {
+    max-width: 50px;
+    margin-left: 5px;
+}
+
+.cartItemRemoveIcon {
+    background: none;
+    border: none;
+    color: #fff;
+}

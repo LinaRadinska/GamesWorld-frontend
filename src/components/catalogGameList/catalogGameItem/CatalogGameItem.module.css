@@ -1,0 +1,86 @@
+.resultsCardWrapper {
+    background: #ffffff0f;
+    border-radius: 3px;
+    border: 1px solid #282b34;
+    transition: transform 300ms ease;
+}
+
+.resultsCardWrapper:hover {
+    box-shadow: #313339;
+    background: #ffffff1f;
+    transform: scale(1.05);
+}
+
+.resultsCardWrapper:hover .detailButton {
+    visibility: visible;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: transform 300ms ease;
+}
+
+.resultsCard {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.resultsCardImgWrapper {
+    align-self: center;
+    margin-top: 8px;
+}
+
+.resultsCardImg {
+    width: 250px;
+    height: 300px;
+}
+
+.resultsCardTitle {
+    text-align: center;
+}
+
+.resultsCardContent {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 15px;
+    align-items: flex-end;
+    margin-top: auto;
+    width: 100%;
+}
+
+.resultsCardPrice {
+    display: flex;
+    flex-direction: column;
+}
+
+.resultsCardPriceBase {
+    text-decoration: line-through;
+    font-size: 14px;
+}
+
+.detailButton {
+    visibility: hidden;
+    width: 40px;
+    height: 35px;
+}
+
+.detailButton:hover {
+    transform: scale(1.2);
+}
+
+.detailButtonLink {
+    text-decoration: none;
+    color: #ddd;
+
+}
+
+.addToCartImg {
+    color: white;
+}
+
+@media screen and (max-width: 1200px) {
+    .resultsWrapper {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}

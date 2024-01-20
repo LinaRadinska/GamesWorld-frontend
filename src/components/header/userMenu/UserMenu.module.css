@@ -1,0 +1,51 @@
+/* Header User Menu */
+
+.headerUserMenu {
+    display: flex;
+    position: relative;
+}
+
+.headerUserMenu .userMenuBox {
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-right: 15px;
+}
+
+.headerUserMenu .userMenuItemCart {
+    padding-bottom: 12px;
+    margin-top: 12px;
+}
+
+.headerUserMenu .userMenuItemCartLabel {
+    cursor: pointer;
+}
+
+.headerUserMenu .userMenuItemCartCount {
+    background-color: #d53a9d;
+    left: 90%; 
+}
+
+.headerUserMenu .userMenuLink {
+    color: white;
+    margin-right: 10px;
+    padding-bottom: 15px;
+    margin-top: 15px;
+}
+
+.userMenuItem {
+    color: white;
+    margin-right: 10px;
+    padding-bottom: 15px;
+    margin-top: 15px;
+}
+
+.headerUserMenu .userMenuText {
+    cursor: pointer;
+}
+
+.headerUserMenu .userMenuIcon {
+    font-size: 20px;
+    margin-left: 5px;
+    cursor: pointer;
+}
