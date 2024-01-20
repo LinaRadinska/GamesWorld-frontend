@@ -1,10 +1,6 @@
-blue
-# Architecture 
+# Architecture
 
 The site is structured around three main folders (components, lib, and pages )
-
-
-
 
 # Components
 
