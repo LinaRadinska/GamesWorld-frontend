@@ -1,14 +1,17 @@
 import { IconDefinition } from "@fortawesome/free-brands-svg-icons";
 
-export type Product = {
-    _id: string,
+export type Game = {
+    id: string,
     title: string,
     description: string,
     cover: string,
     trailer: string,
     discount: number,
     price: number,
-    genres: string[]
+    status: string,
+    genres: string[],
+    features: string,
+    reviews: string[]
 }
 
 export type CartProduct = {
@@ -113,7 +116,13 @@ export type ServerError = {
     isError: boolean
 }
 
-export type UpcomingProducts = Product[]
+export type GetGameByIdResponse ={
+    game: Game
+}
+
+export type GetUpcomingGamesResponse = {
+    games: Game[]
+}
 
 export type SubmenuItem = {
     title: string,

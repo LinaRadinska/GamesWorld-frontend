@@ -1,23 +1,23 @@
 import { Link } from 'react-router-dom';
-import { Product } from '../../../lib/types';
+import { Game } from '../../../lib/types';
 
 import styles from './GameCardItem.module.css';
 
-const GameCardItem = ({game}: {game: Product}): JSX.Element => {
+const GameCardItem = ({game}: {game: Game}): JSX.Element => {
 
     return (
         <div className={styles.productsWidgetCard}>
-            <Link to={`/detail/${game._id}`} className={styles.productsWidgetCardLink}>
+            <Link to={`/detail/${game.id}`} className={styles.productsWidgetCardLink}>
                 <img
                     className={styles.productsWidgetCardImg}
-                    src={`/images/games/${game.cover}`}
+                    src={`${game.cover}`}
                     alt={game.title}
                 />
             </Link>
             <div className={styles.productsWidgetCardTitle}>
                 {game.title}
             </div>
-            <Link to={`/detail/${game._id}`} className={styles.productsWidgetCardButtonLink}>
+            <Link to={`/detail/${game.id}`} className={styles.productsWidgetCardButtonLink}>
                 <div className={styles.productsWidgetCardButtonText}> View </div>
             </Link>
         </div>

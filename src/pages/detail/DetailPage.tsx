@@ -18,7 +18,7 @@ import useCommentApi from '../../lib/useCommentApi';
 import useGameApi from '../../lib/useGameApi';
 
 import StaticRatingStars from '../../components/staticRatingStars/StaticRatingStars';
-import { ApiError, AuthContextType, CartContextType, EditModalState, GameComment, GameComments, NewComment, Product, ShortValidation } from "../../lib/types";
+import { ApiError, AuthContextType, CartContextType, EditModalState, GameComment, GameComments, NewComment, Game, ShortValidation } from "../../lib/types";
 
 const DetailPage = () => {
 
@@ -31,16 +31,20 @@ const DetailPage = () => {
     const { gameId } = useParams<string>();
     const id = gameId == undefined ? "" : gameId;
 
-    const [game, setGame] = useState<Product>({
-        _id: "",
+    const [game, setGame] = useState<Game>({
+        id: "",
         title: "",
         description: "",
         cover: "",
         trailer: "",
         discount: 0,
         price: 0,
+        status: "",
         genres: [],
+        features: "",
+        reviews: []
     });
+
     const [allComments, setAllComments] = useState<GameComments>([]);
     const [newComment, setNewComment] = useState<NewComment>({
         _gameId: id,
@@ -76,7 +80,7 @@ const DetailPage = () => {
 
         getGame(id)
             .then(data => {
-                setGame(data);
+                setGame(data.game);
             })
             .catch((error: Promise<ApiError>) => {
                 navigate('/');
@@ -254,7 +258,7 @@ const DetailPage = () => {
                             </div>
                         </div>
                         <aside className={styles.gameBoxRight}>
-                            <img className={styles.gameImage} src={`/images/games/${game.cover}`} />
+                            <img className={styles.gameImage} src={game.cover} />
                             <div className={styles.gamePrice}>{price}€</div>
                             <button className={styles.gameAddToCartBtn} onClick={addGameToCart}>
                                 Add to cart

@@ -9,7 +9,7 @@ import CatalogFilters from "../../components/catalogFilters/CatalogFilters";
 import CatalogSort from "../../components/catalogSort/CatalogSort";
 import CatalogGameList from "../../components/catalogGameList/CatalogGameList";
 import CatalogPagination from "../../components/catalogPagination/CatalogPagination";
-import { Product, Query} from '../../lib/types';
+import { Game, Query} from '../../lib/types';
 import { convertOffset, convertToURLSearchParams } from '../../lib/Converters';
 
 
@@ -20,7 +20,7 @@ const CatalogPage = (): JSX.Element => {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
-    const [games, setGames] = useState<Product[]>([]);
+    const [games, setGames] = useState<Game[]>([]);
     const [query, setQuery] = useState<Query>({
         query: searchParams.get('query') ? searchParams.get('query') : "",
         sortBy: searchParams.get('sortBy') ? searchParams.get('sortBy') : "price",

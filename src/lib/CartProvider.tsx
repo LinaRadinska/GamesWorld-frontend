@@ -46,10 +46,10 @@ export const CartProvider = ({ children }: ContextProviderProps): JSX.Element =>
                     products: [
                         ...cart.products,
                         {
-                            gameId: data._id,
-                            cover: data.cover,
-                            title: data.title,
-                            price: data.price,
+                            gameId: data.game.id,
+                            cover: data.game.cover,
+                            title: data.game.title,
+                            price: data.game.price,
                             quantity: 1,
                         }
                     ]

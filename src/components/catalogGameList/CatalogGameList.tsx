@@ -1,9 +1,9 @@
 import styles from './CatalogGameList.module.css';
 
 import CatalogGameItem from "./catalogGameItem/CatalogGameItem";
-import { Product } from '../../lib/types';
+import { Game } from '../../lib/types';
 
-const CatalogGameList = ({ games }: {games: Product[]}): JSX.Element => {
+const CatalogGameList = ({ games }: {games: Game[]}): JSX.Element => {
     
     return (
         <>
@@ -17,7 +17,7 @@ const CatalogGameList = ({ games }: {games: Product[]}): JSX.Element => {
             }
             <div className={styles.resultsWrapper}>
                 {games.map((game) => (
-                    <CatalogGameItem key={game._id} game={game} />
+                    <CatalogGameItem key={game.id} game={game} />
                 ))}
             </div>
         </>

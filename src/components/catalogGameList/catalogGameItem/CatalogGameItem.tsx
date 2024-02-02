@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
-import { Product } from '../../../lib/types';
+import { Game } from '../../../lib/types';
 
 import styles from './CatalogGameItem.module.css';
 
 
-const CatalogGameItem = ({ game }: {game: Product}): JSX.Element => {
+const CatalogGameItem = ({ game }: {game: Game}): JSX.Element => {
 
     let price: number = game.price;
     let convertedPrice: string = game.price.toFixed(2);
@@ -43,7 +43,7 @@ const CatalogGameItem = ({ game }: {game: Product}): JSX.Element => {
 
                     <div className={styles.resultsCardAddToCart}>
                         <button className={styles.detailButton} style={{ background: "linear-gradient(#c026d37a, #7c3aed91)" }}>
-                            <Link to={`/detail/${game._id}`} className={styles.detailButtonLink}>
+                            <Link to={`/detail/${game.id}`} className={styles.detailButtonLink}>
                                 View
                             </Link>
                         </button>
