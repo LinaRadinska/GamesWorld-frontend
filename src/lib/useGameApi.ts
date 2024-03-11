@@ -1,4 +1,4 @@
-import { ApiError, Game, GetGameByIdResponse, GetUpcomingGamesResponse } from "./types";
+import { ApiError, SearchGamesResponse, GetGameByIdResponse, GetUpcomingGamesResponse } from "./types";
 import { useFetch, UseFetchResult } from "./useFetcher";
 
 const useGameApi = () => {
@@ -17,27 +17,15 @@ const useGameApi = () => {
             });
     }
 
-    const searchGames = (title: string | null, showDiscount: boolean, sortBy: string | null, offset: string | null | number, pageSize: number): Promise<Game[]> => {
+    const searchGames = (title: string | null, showDiscount: boolean, sortBy: string | null, offset: string | null | number, pageSize: number): Promise<SearchGamesResponse> => {
 
-        let where = `where=title%20LIKE%20${JSON.stringify(title)}`;
-
-        if (showDiscount) {
-            where += "%20AND%20discount>0";
-        }
-
-        return fetch(`${baseUrl}?${where}&sortBy=${sortBy}&offset=${offset}&pageSize=${pageSize}`)
+        return fetch(`http://localhost:5000/api/games/search?title=${title}&discount=${showDiscount}&sortBy=${sortBy}&offset=${offset}&pageSize=${pageSize}`)
             .then(response => response.json())
     }
 
     const countGames = (title: string | null, showDiscount: boolean): Promise<number> => {
 
-        let where = `where=title%20LIKE%20${JSON.stringify(title)}`;
-
-        if (showDiscount) {
-            where += "%20AND%20discount>0";
-        }
-
-        return fetch(`${baseUrl}?${where}&count`)
+        return fetch(`http://localhost:5000/api/games/search?&count`)
             .then(response => response.json())
     }
 

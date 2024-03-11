@@ -40,11 +40,10 @@ const CatalogPage = (): JSX.Element => {
         });
 
         searchGames(query.query, query.discount, query.sortBy, query.offset, query.pageSize)
-            .then(data => setGames(data));
+            .then(data => setGames(data.results));
 
-
-        countGames(query.query, query.discount)
-            .then(result => setNumberOfResults(result));
+        // countGames(query.query, query.discount)
+        //     .then(result => setNumberOfResults(result));
         
 
     }, [query]);
@@ -60,7 +59,7 @@ const CatalogPage = (): JSX.Element => {
                         <div className={styles.catalogContentResults}>
                             <CatalogSort handleQuery={setQuery} sortBy={query.sortBy} />
                             <CatalogGameList games={games} />
-                            <CatalogPagination numberOfResults={numberOfResults} pageSize={pageSize} handleQuery={setQuery} offset={convertOffset(query.offset)} />
+                            {/* <CatalogPagination numberOfResults={numberOfResults} pageSize={pageSize} handleQuery={setQuery} offset={convertOffset(query.offset)} /> */}
                         </div>
                     </div>
                 </div>

@@ -6,9 +6,8 @@ import styles from './CatalogGameItem.module.css';
 
 const CatalogGameItem = ({ game }: {game: Game}): JSX.Element => {
 
-    let price: number = game.price;
-    let convertedPrice: string = game.price.toFixed(2);
-    let finalPrice: string = (price - game.discount).toFixed(2);
+    let price: string = game.price.toFixed(2);
+    let discountedPrice: string = game.discountedPrice.toFixed(2);
 
     return (
         <div className={styles.resultsCardWrapper}>
@@ -16,7 +15,7 @@ const CatalogGameItem = ({ game }: {game: Game}): JSX.Element => {
                 <div className={styles.resultsCardImgWrapper}>
                     <img
                         className={styles.resultsCardImg}
-                        src={`/images/games/${game.cover}`}
+                        src={`${game.cover}`}
                         alt={game.title}
                     />
                 </div>
@@ -25,18 +24,18 @@ const CatalogGameItem = ({ game }: {game: Game}): JSX.Element => {
                 </div>
                 <div className={styles.resultsCardContent}>
 
-                    {game.discount == 0
+                    {discountedPrice == price
                         ? <div className={styles.resultsCardPrice}>
                             <div className={styles.resultsCardPriceFinal}>
-                                {convertedPrice}€
+                                {price}€
                             </div>
                         </div>
                         : <div className={styles.resultsCardPrice}>
                             <div className={styles.resultsCardPriceBase}>
-                                {convertedPrice}
+                                {price}
                             </div>
                             <div className={styles.resultsCardPriceFinal}>
-                                {finalPrice}€
+                                {discountedPrice}€
                             </div>
                         </div>
                     }

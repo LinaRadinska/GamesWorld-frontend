@@ -37,7 +37,7 @@ const DetailPage = () => {
         description: "",
         cover: "",
         trailer: "",
-        discount: 0,
+        discountedPrice: 0,
         price: 0,
         status: "",
         genres: [],
@@ -56,6 +56,7 @@ const DetailPage = () => {
     const [editHover, setEditHover] = useState(0);
 
     const price: string = game.price.toFixed(2);
+    const discountedPrice: string = game.discountedPrice.toFixed(2);
     const [createValidation, setCreateValidation] = useState<ShortValidation>({ description: "" });
     const [editValidation, setEditValidation] = useState<ShortValidation>({ description: "" });
 
@@ -259,7 +260,23 @@ const DetailPage = () => {
                         </div>
                         <aside className={styles.gameBoxRight}>
                             <img className={styles.gameImage} src={game.cover} />
-                            <div className={styles.gamePrice}>{price}€</div>
+                            <div className={styles.gamePrice}>
+                                {discountedPrice == price
+                                    ? <div className={styles.resultsCardPrice}>
+                                        <div className={styles.resultsCardPriceFinal}>
+                                            {price}€
+                                        </div>
+                                    </div>
+                                    : <div className={styles.resultsCardPrice}>
+                                        <div className={styles.resultsCardPriceBase}>
+                                            {price}
+                                        </div>
+                                        <div className={styles.resultsCardPriceFinal}>
+                                            {discountedPrice}€
+                                        </div>
+                                    </div>
+                                }
+                            </div>
                             <button className={styles.gameAddToCartBtn} onClick={addGameToCart}>
                                 Add to cart
                                 <FontAwesomeIcon icon={faCartShopping} className={styles.gameAddToCartIcon} />

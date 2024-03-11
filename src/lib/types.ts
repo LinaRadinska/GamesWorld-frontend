@@ -6,7 +6,7 @@ export type Game = {
     description: string,
     cover: string,
     trailer: string,
-    discount: number,
+    discountedPrice: number,
     price: number,
     status: string,
     genres: string[],
@@ -116,8 +116,20 @@ export type ServerError = {
     isError: boolean
 }
 
-export type GetGameByIdResponse ={
+export type GetGameByIdResponse = {
     game: Game
+}
+
+export type Facet = {
+    _id: string,
+    count: number
+}
+
+export type SearchGamesResponse = {
+    facets: Facet[],
+    offset: number,
+    pageSize: number,
+    results: Game[]
 }
 
 export type GetUpcomingGamesResponse = {

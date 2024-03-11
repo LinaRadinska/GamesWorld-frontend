@@ -81,6 +81,17 @@
     margin-bottom: 20px;
 }
 
+.resultsCardPrice {
+    display: flex;
+    flex-direction: column;
+}
+
+.resultsCardPriceBase {
+    text-decoration: line-through;
+    font-size: 14px;
+}
+
+
 .gamePrice {
     color: #ddd;
     font-size: 20px;

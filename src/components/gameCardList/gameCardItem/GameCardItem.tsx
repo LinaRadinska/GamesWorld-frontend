@@ -3,7 +3,7 @@ import { Game } from '../../../lib/types';
 
 import styles from './GameCardItem.module.css';
 
-const GameCardItem = ({game}: {game: Game}): JSX.Element => {
+const GameCardItem = ({ game }: { game: Game }): JSX.Element => {
 
     return (
         <div className={styles.productsWidgetCard}>
