@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, createSearchParams, useSearchParams, URLSearchParamsInit } from 'react-router-dom';
+
+import { Facets, Game, Query } from '../../lib/types';
+import { convertOffset, convertToURLSearchParams } from '../../lib/Converters';
 import useGameApi from '../../lib/useGameApi';
 
 import styles from './CatalogPage.module.css';
@@ -9,9 +12,6 @@ import CatalogFilters from "../../components/catalogFilters/CatalogFilters";
 import CatalogSort from "../../components/catalogSort/CatalogSort";
 import CatalogGameList from "../../components/catalogGameList/CatalogGameList";
 import CatalogPagination from "../../components/catalogPagination/CatalogPagination";
-import { Game, Query} from '../../lib/types';
-import { convertOffset, convertToURLSearchParams } from '../../lib/Converters';
-
 
 const CatalogPage = (): JSX.Element => {
     const pageSize: number = 6;
@@ -21,16 +21,17 @@ const CatalogPage = (): JSX.Element => {
     const navigate = useNavigate();
 
     const [games, setGames] = useState<Game[]>([]);
+    const [facets, setFacets] = useState<Facets>({});
     const [query, setQuery] = useState<Query>({
-        query: searchParams.get('query') ? searchParams.get('query') : "",
+        title: searchParams.get('title') ? searchParams.get('title') : "",
         sortBy: searchParams.get('sortBy') ? searchParams.get('sortBy') : "price",
         discount: searchParams.get('discount') === 'true',
         offset: searchParams.get('offset') ? searchParams.get('offset') : 0,
         pageSize: pageSize,
+        facets: searchParams.get('facets') ? searchParams.get('facets') : ""
     });
 
     const [numberOfResults, setNumberOfResults] = useState<number>(0);
-
 
     useEffect(() => {
 
@@ -39,23 +40,25 @@ const CatalogPage = (): JSX.Element => {
             search: `?${createSearchParams(convertToURLSearchParams(query))}`
         });
 
-        searchGames(query.query, query.discount, query.sortBy, query.offset, query.pageSize)
-            .then(data => setGames(data.results));
+        searchGames(query.title, query.discount, query.sortBy, query.offset, query.pageSize, query.facets)
+            .then(data => {
+                setGames(data.results);
+                setFacets(data.facets);
+            });
 
         // countGames(query.query, query.discount)
         //     .then(result => setNumberOfResults(result));
-        
+
 
     }, [query]);
-
 
     return (
         <>
             <div className="main-wrapper">
                 <div className="wrapper">
-                    <CatalogHeader query={query.query} handleQuery={setQuery} />
+                    <CatalogHeader title={query.title} handleQuery={setQuery} />
                     <div className={styles.catalogContent}>
-                        <CatalogFilters discount={query.discount} pageSize={pageSize} handleDiscount={setQuery} />
+                        <CatalogFilters facets={facets} discount={query.discount} pageSize={pageSize} handleQuery={setQuery} />
                         <div className={styles.catalogContentResults}>
                             <CatalogSort handleQuery={setQuery} sortBy={query.sortBy} />
                             <CatalogGameList games={games} />

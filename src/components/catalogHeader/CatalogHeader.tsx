@@ -6,17 +6,17 @@ import styles from './CatalogHeader.module.css';
 import { Query } from "../../lib/types";
 
 type CatalogHeaderProps = {
-    query: string | null,
+    title: string | null,
     handleQuery: React.Dispatch<React.SetStateAction<Query>>
 }
 
-const CatalogHeader = ({ query, handleQuery }: CatalogHeaderProps) => {
+const CatalogHeader = ({ title, handleQuery }: CatalogHeaderProps) => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         handleQuery((state) => {
             return {
                 ...state,
-                query: e.target.value,
+                title: e.target.value,
                 offset: 0
             }
         })
@@ -35,7 +35,7 @@ const CatalogHeader = ({ query, handleQuery }: CatalogHeaderProps) => {
                         type="search"
                         name="search"
                         placeholder="Search shop"
-                        value={query == null ? '' : query}
+                        value={title == null ? '' : title}
                         onChange={handleChange}
                     />
 

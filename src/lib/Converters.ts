@@ -3,8 +3,8 @@ import { Query } from "./types";
 export const convertToURLSearchParams = (query: Query): Record<string, string | string[]> => {
     let searchParams: Record<string, string | string[]> = { };
 
-    if(query.query) {
-        searchParams = { ...searchParams, query: query.query }
+    if(query.title) {
+        searchParams = { ...searchParams, title: query.title }
     }
 
     if(query.sortBy) {

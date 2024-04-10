@@ -17,9 +17,9 @@ const useGameApi = () => {
             });
     }
 
-    const searchGames = (title: string | null, showDiscount: boolean, sortBy: string | null, offset: string | null | number, pageSize: number): Promise<SearchGamesResponse> => {
+    const searchGames = (title: string | null, showDiscount: boolean, sortBy: string | null, offset: string | null | number, pageSize: number, facets: string | null): Promise<SearchGamesResponse> => {
 
-        return fetch(`http://localhost:5000/api/games/search?title=${title}&discount=${showDiscount}&sortBy=${sortBy}&offset=${offset}&pageSize=${pageSize}`)
+        return fetch(`http://localhost:5000/api/games/search?title=${title}&discount=${showDiscount}&sortBy=${sortBy}&offset=${offset}&pageSize=${pageSize}&facets=${facets}`)
             .then(response => response.json())
     }
 

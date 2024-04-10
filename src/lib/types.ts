@@ -34,11 +34,12 @@ export type CartContextType = {
 }
 
 export type Query = {
-    query: string | null,
+    title: string | null,
     sortBy: string | null,
     discount: boolean,
     offset: string | null | number,
     pageSize: number,
+    facets: string | null
 }
 
 export type SocialItem = {
@@ -69,7 +70,7 @@ export type AuthContextType = {
         isError: boolean;
     } | {
         isError: boolean;
-    } | undefined> 
+    } | undefined>
 }
 
 export type LoginResponse = {
@@ -109,7 +110,6 @@ export type GetUserInfoResponse = {
     message: string
 }
 
-
 export type ServerError = {
     errorCode: number,
     errorMessage: string,
@@ -120,13 +120,18 @@ export type GetGameByIdResponse = {
     game: Game
 }
 
-export type Facet = {
-    _id: string,
-    count: number
+export type FacetValue = {
+    id: string,
+    count: number,
+    name: string
+}
+
+export type Facets = {
+    [key: string]: FacetValue[];
 }
 
 export type SearchGamesResponse = {
-    facets: Facet[],
+    facets: Facets,
     offset: number,
     pageSize: number,
     results: Game[]
