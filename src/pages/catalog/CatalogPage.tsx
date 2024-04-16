@@ -14,7 +14,7 @@ import CatalogGameList from "../../components/catalogGameList/CatalogGameList";
 import CatalogPagination from "../../components/catalogPagination/CatalogPagination";
 
 const CatalogPage = (): JSX.Element => {
-    const pageSize: number = 6;
+    const pageSize: number = 3;
 
     const { searchGames, countGames } = useGameApi();
     const [searchParams] = useSearchParams();
@@ -26,11 +26,10 @@ const CatalogPage = (): JSX.Element => {
         title: searchParams.get('title') ? searchParams.get('title') : "",
         sortBy: searchParams.get('sortBy') ? searchParams.get('sortBy') : "price",
         discount: searchParams.get('discount') === 'true',
-        offset: searchParams.get('offset') ? searchParams.get('offset') : 0,
+        pageNumber: Number(searchParams.get('pageNumber')) >= 1 ? Number(searchParams.get('pageNumber')) : 1,
         pageSize: pageSize,
         facets: searchParams.get('facets') ? searchParams.get('facets') : ""
     });
-
     const [numberOfResults, setNumberOfResults] = useState<number>(0);
 
     useEffect(() => {
@@ -40,17 +39,18 @@ const CatalogPage = (): JSX.Element => {
             search: `?${createSearchParams(convertToURLSearchParams(query))}`
         });
 
-        searchGames(query.title, query.discount, query.sortBy, query.offset, query.pageSize, query.facets)
+        searchGames(query.title, query.discount, query.sortBy, query.pageNumber, query.pageSize, query.facets)
             .then(data => {
                 setGames(data.results);
                 setFacets(data.facets);
+                setNumberOfResults(data.totalResults)
             });
 
         // countGames(query.query, query.discount)
         //     .then(result => setNumberOfResults(result));
 
-
     }, [query]);
+
 
     return (
         <>
@@ -63,6 +63,7 @@ const CatalogPage = (): JSX.Element => {
                             <CatalogSort handleQuery={setQuery} sortBy={query.sortBy} />
                             <CatalogGameList games={games} />
                             {/* <CatalogPagination numberOfResults={numberOfResults} pageSize={pageSize} handleQuery={setQuery} offset={convertOffset(query.offset)} /> */}
+                            <CatalogPagination numberOfResults={numberOfResults} pageSize={pageSize} pageNumber={query.pageNumber} handleQuery={setQuery} />
                         </div>
                     </div>
                 </div>

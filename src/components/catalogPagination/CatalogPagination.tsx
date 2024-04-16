@@ -1,76 +1,84 @@
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 
+import { Query } from '../../lib/types';
+
 import styles from './CatalogPagination.module.css';
-import { Query } from "../../lib/types";
+import usePagination from "../../lib/usePagination";
 
 type CatalogPaginationProps = {
     numberOfResults: number,
     pageSize: number,
-    handleQuery: React.Dispatch<React.SetStateAction<Query>>,
-    offset: number
+    pageNumber: number,
+    handleQuery: React.Dispatch<React.SetStateAction<Query>>
 }
 
-const CatalogPagination = ({
-    numberOfResults,
-    pageSize,
-    handleQuery,
-    offset
-}: CatalogPaginationProps) => {
+const CatalogPagination = ({ numberOfResults, pageSize, pageNumber, handleQuery }: CatalogPaginationProps) => {
+    let pages: JSX.Element[] = [];
 
-    const numberOfPages: number = Math.ceil(numberOfResults / pageSize);
-    const currentPage: number = offset / pageSize + 1;
+    let numberOfPages: number = Math.ceil(numberOfResults / pageSize);
+    let siblingCount = 1;
 
-    var pages = [];
-    for (var i = 1; i <= numberOfPages; i++) {
-        const offsetValue: number = (i - 1) * pageSize;
-        pages.push(
-            <button key={i} className={`${styles.paginationButton} ${currentPage == i ? `${styles.bold}` : ''}`} onClick={() => {
-                handleQuery((state) => {
-                    return {
-                        ...state,
-                        offset: offsetValue
-                    }
-                })
-            }}>
-                {i}
-            </button>
-        );
+    const { paginationRange } = usePagination({ numberOfResults, pageSize, siblingCount, currentPage: pageNumber });
+
+    console.log(paginationRange);
+
+    if (paginationRange) {
+        pages = paginationRange.map((currentPage, i) => {
+
+            if (currentPage === "DOTS") {
+                return <span key={i}>...</span>;
+            }
+
+            return (
+                <button key={i} className={`${styles.paginationButton} ${pageNumber === currentPage ? styles.bold : ''}`} onClick={() => {
+                    handleQuery((state) => {
+                        return {
+                            ...state,
+                            pageNumber: Number(currentPage)
+                        }
+                    })
+                }}>
+                    {currentPage}
+                </button>
+            )
+
+        })
     }
 
     return (
         <div className={styles.pagination}>
-            {offset > 0 &&
-                <button className={styles.paginationButton}>
-                    <FontAwesomeIcon icon={faChevronLeft} onClick={() => {
-                        const offsetPrev = offset - pageSize;
-                        handleQuery((state) => {
-                            return {
-                                ...state,
-                                offset: offsetPrev
-                            }
-                        })
-                    }} />
-                </button>
-            }
+            <button
+                className={`${styles.paginationButton} ${pageNumber <= 1 ? styles.disabledPaginationButton : ''}`}
+                disabled={pageNumber <= 1}
+                onClick={() => {
+                    let prev = pageNumber - 1;
+                    handleQuery((state) => {
+                        return {
+                            ...state,
+                            pageNumber: prev
+                        }
+                    })
+                }}>
+                <FontAwesomeIcon icon={faChevronLeft} />
+            </button>
             {pages}
-            {currentPage < numberOfPages &&
-                <button className={styles.paginationButton}>
-                    <FontAwesomeIcon icon={faChevronRight} onClick={() => {
-                        const offsetNext = offset + pageSize;
-                        handleQuery((state) => {
-                            return {
-                                ...state,
-                                offset: offsetNext
-                            }
-                        })
-                    }} />
-                </button>
-            }
-
+            <button
+                className={`${styles.paginationButton} ${pageNumber >= numberOfPages ? styles.disabledPaginationButton : ''}`}
+                disabled={pageNumber >= numberOfPages}
+                onClick={() => {
+                    let next = pageNumber + 1;
+                    handleQuery((state) => {
+                        return {
+                            ...state,
+                            pageNumber: next
+                        }
+                    })
+                }}>
+                <FontAwesomeIcon icon={faChevronRight} />
+            </button>
         </div>
-    );
+    )
 }
 
 export default CatalogPagination;

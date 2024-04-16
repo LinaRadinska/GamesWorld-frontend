@@ -37,7 +37,7 @@ export type Query = {
     title: string | null,
     sortBy: string | null,
     discount: boolean,
-    offset: string | null | number,
+    pageNumber: number,
     pageSize: number,
     facets: string | null
 }
@@ -134,7 +134,8 @@ export type SearchGamesResponse = {
     facets: Facets,
     offset: number,
     pageSize: number,
-    results: Game[]
+    results: Game[],
+    totalResults: number
 }
 
 export type GetUpcomingGamesResponse = {
@@ -143,7 +144,7 @@ export type GetUpcomingGamesResponse = {
 
 export type SubmenuItem = {
     title: string,
-    nav: string,
+    nav: string
 }
 
 export type DropDownItem = {

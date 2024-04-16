@@ -4,10 +4,14 @@
 }
 
 .paginationButton {
-    background-color: #313339;
     color: white;
     border: none;
     cursor: pointer;
+}
+
+.disabledPaginationButton {
+    color: #6f7373;
+    border: none;
 }
 
 .bold {
