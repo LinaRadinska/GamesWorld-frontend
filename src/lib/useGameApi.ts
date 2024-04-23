@@ -3,11 +3,10 @@ import { useFetch, UseFetchResult } from "./useFetcher";
 
 const useGameApi = () => {
 
-    //"http://localhost:5000/api/games"
-    const baseUrl = "http://localhost:3030/data/games";
+    const baseUrl = "http://localhost:5000/api/games";
 
     const getGame = (gameId: string): Promise<GetGameByIdResponse> => {
-        return fetch(`http://localhost:5000/api/games/${gameId}`)
+        return fetch(`${baseUrl}/${gameId}`)
             .then((response: Response) => {
                 if (!response.ok) {
                     throw response.json() as Promise<ApiError>;
@@ -19,20 +18,14 @@ const useGameApi = () => {
 
     const searchGames = (title: string | null, showDiscount: boolean, sortBy: string | null, pageNumber: number, pageSize: number, facets: string | null): Promise<SearchGamesResponse> => {
 
-        return fetch(`http://localhost:5000/api/games/search?title=${title}&discount=${showDiscount}&sortBy=${sortBy}&pageNumber=${pageNumber}&pageSize=${pageSize}&facets=${facets}`)
-            .then(response => response.json())
-    }
-
-    const countGames = (title: string | null, showDiscount: boolean): Promise<number> => {
-
-        return fetch(`http://localhost:5000/api/games/search?&count`)
+        return fetch(`${baseUrl}/search?title=${title}&discount=${showDiscount}&sortBy=${sortBy}&pageNumber=${pageNumber}&pageSize=${pageSize}&facets=${facets}`)
             .then(response => response.json())
     }
 
     const useGetUpcomingGames = (): UseFetchResult<GetUpcomingGamesResponse> => {
 
         const { data, error, isLoading } = useFetch<GetUpcomingGamesResponse>({
-            url: 'http://localhost:5000/api/games/upcoming',
+            url: `${baseUrl}/upcoming`,
             options: {
                 method: 'GET',
             },
@@ -41,7 +34,7 @@ const useGameApi = () => {
         return { data, error, isLoading }
     }
 
-    return { getGame, searchGames, countGames, useGetUpcomingGames };
+    return { getGame, searchGames, useGetUpcomingGames };
 }
 
 export default useGameApi;

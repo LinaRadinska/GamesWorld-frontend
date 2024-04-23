@@ -5,6 +5,8 @@ import styles from './CatalogFilters.module.css';
 
 type CatalogFiltersProps = {
     facets: Facets,
+    queryFacets: string | null,
+    numberOfResults: number,
     discount: boolean,
     pageSize: number,
     handleQuery: React.Dispatch<React.SetStateAction<Query>>
@@ -14,8 +16,25 @@ type SelectedFacet = {
     [category: string]: string[];
 }
 
-const CatalogFilters = ({ facets, discount, pageSize, handleQuery }: CatalogFiltersProps) => {
-    const [selectedFacets, setSelectedFacets] = useState<SelectedFacet>({});
+const CatalogFilters = ({ facets, queryFacets, numberOfResults, discount, pageSize, handleQuery }: CatalogFiltersProps) => {
+
+    const buildSelectedFacetsFromQuery = (queryFacets: string | null): SelectedFacet => {
+
+        let selectedFacets: SelectedFacet = {};
+
+        if (queryFacets) {
+            queryFacets.split("|").forEach(function (pair) {
+                let keyValue = pair.split(":");
+                let facetName = keyValue[0];
+                let facetValue = keyValue[1];
+                selectedFacets[facetName] = facetValue.split(",");
+            });
+        }
+
+        return selectedFacets
+    }
+
+    const [selectedFacets, setSelectedFacets] = useState<SelectedFacet>(buildSelectedFacetsFromQuery(queryFacets));
 
     const handleCheckboxChange = (category: string, facetId: string) => {
 
@@ -67,52 +86,60 @@ const CatalogFilters = ({ facets, discount, pageSize, handleQuery }: CatalogFilt
 
     return (
         <div className={styles.catalogContentFilters}>
-            <div className={styles.filterBox}>
-                <div className={styles.filterBoxContent}>
-                    <label className={styles.checkboxLabel}>
-                        <input
-                            checked={discount}
-                            type="checkbox"
-                            className={styles.checkboxInput}
-                            onChange={(e) => handleQuery(state => {
-                                return {
-                                    ...state,
-                                    offset: 0,
-                                    pageSize: pageSize,
-                                    discount: e.target.checked
-                                }
-                            })}
-                        />
-                        <span className={styles.checkmark} />
-                        Show only discounted
-                    </label>
-                </div>
-            </div>
-            {facets && Object.entries(facets).map(([facetCategory, allFacets]) => {
-                return (
-                    <div key={facetCategory} className={styles.filterBox}>
-                        <div className={styles.filterBoxHeader}>
-                            {facetCategory}
+            {numberOfResults > 0 &&
+                <>
+                    <div className={styles.filterBox}>
+                        <div className={styles.filterBoxContent}>
+                            <label className={styles.checkboxLabel}>
+                                <input
+                                    checked={discount}
+                                    type="checkbox"
+                                    className={styles.checkboxInput}
+                                    onChange={(e) => handleQuery(state => {
+                                        return {
+                                            ...state,
+                                            offset: 0,
+                                            pageSize: pageSize,
+                                            discount: e.target.checked
+                                        }
+                                    })}
+                                />
+                                <span className={styles.checkmark} />
+                                Show only discounted
+                            </label>
                         </div>
-                        {allFacets.map((facet, index) => (
-                            <div key={index} className={styles.filterBoxContent}>
-                                <label className={styles.checkboxLabel}>
-                                    <input
-                                        type="checkbox"
-                                        className={styles.checkboxInput}
-                                        id={facet.id}
-                                        name={facet.name}
-                                        checked={selectedFacets[facetCategory] && selectedFacets[facetCategory].includes(facet.id) || false}
-                                        onChange={(e) => handleCheckboxChange(facetCategory, facet.id)}
-                                    />
-                                    <span className={styles.checkmark} />
-                                    {facet.name}
-                                </label>
-                            </div>
-                        ))}
                     </div>
-                )
-            })}
+                    {facets && Object.entries(facets).map(([facetCategory, allFacets]) => {
+                        let numOfFacetsInCategory = facets[facetCategory].length;
+
+                        return (
+                            numOfFacetsInCategory > 0
+                                ? <div key={facetCategory} className={styles.filterBox}>
+                                    <div className={styles.filterBoxHeader}>
+                                        {facetCategory}
+                                    </div>
+                                    {allFacets.map((facet, index) => (
+                                        <div key={index} className={styles.filterBoxContent}>
+                                            <label className={styles.checkboxLabel}>
+                                                <input
+                                                    type="checkbox"
+                                                    className={styles.checkboxInput}
+                                                    id={facet.id}
+                                                    name={facet.name}
+                                                    checked={selectedFacets[facetCategory] && selectedFacets[facetCategory].includes(facet.id) || false}
+                                                    onChange={(e) => handleCheckboxChange(facetCategory, facet.id)}
+                                                />
+                                                <span className={styles.checkmark} />
+                                                {facet.name}
+                                            </label>
+                                        </div>
+                                    ))}
+                                </div>
+                                : null
+                        )
+                    })}
+                </>
+            }
         </div>
     );
 }

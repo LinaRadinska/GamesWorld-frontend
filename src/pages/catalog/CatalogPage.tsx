@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, createSearchParams, useSearchParams, URLSearchParamsInit } from 'react-router-dom';
+import { useNavigate, createSearchParams, useSearchParams } from 'react-router-dom';
 
 import { Facets, Game, Query } from '../../lib/types';
-import { convertOffset, convertToURLSearchParams } from '../../lib/Converters';
+import { convertToURLSearchParams } from '../../lib/Converters';
 import useGameApi from '../../lib/useGameApi';
 
 import styles from './CatalogPage.module.css';
@@ -16,7 +16,7 @@ import CatalogPagination from "../../components/catalogPagination/CatalogPaginat
 const CatalogPage = (): JSX.Element => {
     const pageSize: number = 3;
 
-    const { searchGames, countGames } = useGameApi();
+    const { searchGames } = useGameApi();
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
@@ -46,11 +46,7 @@ const CatalogPage = (): JSX.Element => {
                 setNumberOfResults(data.totalResults)
             });
 
-        // countGames(query.query, query.discount)
-        //     .then(result => setNumberOfResults(result));
-
     }, [query]);
-
 
     return (
         <>
@@ -58,11 +54,10 @@ const CatalogPage = (): JSX.Element => {
                 <div className="wrapper">
                     <CatalogHeader title={query.title} handleQuery={setQuery} />
                     <div className={styles.catalogContent}>
-                        <CatalogFilters facets={facets} discount={query.discount} pageSize={pageSize} handleQuery={setQuery} />
+                        <CatalogFilters facets={facets} queryFacets={query.facets} numberOfResults={numberOfResults} discount={query.discount} pageSize={pageSize} handleQuery={setQuery} />
                         <div className={styles.catalogContentResults}>
                             <CatalogSort handleQuery={setQuery} sortBy={query.sortBy} />
                             <CatalogGameList games={games} />
-                            {/* <CatalogPagination numberOfResults={numberOfResults} pageSize={pageSize} handleQuery={setQuery} offset={convertOffset(query.offset)} /> */}
                             <CatalogPagination numberOfResults={numberOfResults} pageSize={pageSize} pageNumber={query.pageNumber} handleQuery={setQuery} />
                         </div>
                     </div>

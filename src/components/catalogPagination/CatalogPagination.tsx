@@ -21,7 +21,9 @@ const CatalogPagination = ({ numberOfResults, pageSize, pageNumber, handleQuery 
 
     const { paginationRange } = usePagination({ numberOfResults, pageSize, siblingCount, currentPage: pageNumber });
 
-    console.log(paginationRange);
+    if (numberOfPages < 2) {
+        return null
+    }
 
     if (paginationRange) {
         pages = paginationRange.map((currentPage, i) => {
@@ -46,10 +48,12 @@ const CatalogPagination = ({ numberOfResults, pageSize, pageNumber, handleQuery 
         })
     }
 
+
+
     return (
         <div className={styles.pagination}>
             <button
-                className={`${styles.paginationButton} ${pageNumber <= 1 ? styles.disabledPaginationButton : ''}`}
+                className={`${pageNumber <= 1 ? styles.disabledPaginationButton : styles.paginationButton}`}
                 disabled={pageNumber <= 1}
                 onClick={() => {
                     let prev = pageNumber - 1;
@@ -64,7 +68,7 @@ const CatalogPagination = ({ numberOfResults, pageSize, pageNumber, handleQuery 
             </button>
             {pages}
             <button
-                className={`${styles.paginationButton} ${pageNumber >= numberOfPages ? styles.disabledPaginationButton : ''}`}
+                className={`${pageNumber >= numberOfPages ? styles.disabledPaginationButton : styles.paginationButton}`}
                 disabled={pageNumber >= numberOfPages}
                 onClick={() => {
                     let next = pageNumber + 1;
