@@ -9,16 +9,16 @@ import Modal from 'react-bootstrap/Modal';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar, faPenToSquare, faTrashCan, faCartShopping } from "@fortawesome/free-solid-svg-icons";
 
-import styles from './DetailPage.module.css';
-
 import AuthenticationContext from '../../lib/AuthenticationContext';
 import CartContext from '../../lib/CartContext';
 import useCommentApi from '../../lib/useCommentApi';
 
-import useGameApi from '../../lib/useGameApi';
+import useGetGame from "../../api/Games/useGetGame";
 
 import StaticRatingStars from '../../components/staticRatingStars/StaticRatingStars';
-import { ApiError, AuthContextType, CartContextType, EditModalState, GameComment, GameComments, NewComment, Game, ShortValidation } from "../../lib/types";
+import { AuthContextType, CartContextType, EditModalState, GameComment, GameComments, NewComment, Game, ShortValidation } from "../../lib/types";
+
+import styles from './DetailPage.module.css';
 
 const DetailPage = () => {
 
@@ -26,7 +26,7 @@ const DetailPage = () => {
     const { auth } = useContext(AuthenticationContext) as AuthContextType;
     const { updateCart } = useContext(CartContext) as CartContextType;
     const { getComments, createComment, editComment, deleteComment } = useCommentApi();
-    const { getGame } = useGameApi();
+    const { isLoading, error, fetchGame, clearError } = useGetGame();
 
     const { gameId } = useParams<string>();
     const id = gameId == undefined ? "" : gameId;
@@ -78,19 +78,23 @@ const DetailPage = () => {
     });
 
     useEffect(() => {
+        const loadGame = async () => {
+            const data = await fetchGame(id);
 
-        getGame(id)
-            .then(data => {
+            if (data) {
                 setGame(data.game);
-            })
-            .catch((error: Promise<ApiError>) => {
-                navigate('/');
-            });
+            }
+        }
 
+        loadGame();
 
-        getComments(id)
-            .then(data => setAllComments(data));
-    }, []);
+        // .catch((error: Promise<ApiError>) => {
+        //     navigate('/');
+        // });
+
+        // getComments(id)
+        //     .then(data => setAllComments(data));
+    }, [fetchGame]);
 
     const handleClose = () => setEditModal({
         isOpen: false,

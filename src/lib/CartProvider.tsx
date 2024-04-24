@@ -1,8 +1,7 @@
 import { ADD_TO_CART_INCREASE, ADD_TO_CART_DECREASE, CART_EXPIRATION_LIMIT } from "./Constants";
 
 import CartContext from "./CartContext";
-import useGameApi from "./useGameApi";
-
+import useGetGame from "../api/Games/useGetGame";
 
 import useSessionStorage from "./useSessionStorage";
 import { Cart } from "./types";
@@ -17,9 +16,9 @@ export const CartProvider = ({ children }: ContextProviderProps): JSX.Element =>
     const defaultCart: Cart = { expiration: now.getTime() + CART_EXPIRATION_LIMIT, products: [] }; 
     const [cart, setCart] = useSessionStorage<Cart>("cart", defaultCart);
 
-    const { getGame } = useGameApi();
+    const { isLoading, error, fetchGame, clearError } = useGetGame();
 
-    const updateCart = (gameId: string, action: string): Promise<void> => getGame(gameId)
+    const updateCart = (gameId: string, action: string): Promise<void> => fetchGame(gameId)
         .then(data => {
             // passing function to setCart method
             //if the game exists

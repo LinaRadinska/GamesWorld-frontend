@@ -1,46 +1,69 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import ServerError from './serverError';
 
-interface UseFetchProps {
-  url: string;
-  options?: RequestInit;
+export interface UseFetcherProps {
+    url: string;
+    options?: RequestInit;
 }
 
-export interface UseFetchResult<T> {
-  data: T | null;
-  error: ServerError | null;
-  isLoading: boolean;
+export interface UseFetcherResult<T> {
+    isLoading: boolean;
+    error: ServerError | null;
+    sendRequest: ({ url, options }: UseFetcherProps) => Promise<T>;
+    clearError: () => void
 }
 
-interface ApiError {
-  message: string
-}
+export const useFetcher = <T>(): UseFetcherResult<T> => {
+    const [error, setError] = useState<ServerError | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
 
-export const useFetch = <T>({ url, options }: UseFetchProps): UseFetchResult<T> => {
-  const [data, setData] = useState<T | null>(null);
-  const [error, setError] = useState<ServerError | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+    const activeHttpRequests = useRef<AbortController[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(url, options);
-        if (!response.ok) {
-          const apiError = await response.json() as ApiError;
-          throw new ServerError(`Request failed with status: ${response.status}`, response.status, apiError.message);
+    const sendRequest = useCallback(async ({ url, options }: UseFetcherProps) => {
+        
+        setIsLoading(true);
+        const httpAbortCtrl = new AbortController();
+        activeHttpRequests.current.push(httpAbortCtrl);
+
+        try {
+            const response = await fetch(url, {
+                ...options,
+                signal: httpAbortCtrl.signal
+            });
+
+            const responseData = await response.json();
+
+            activeHttpRequests.current = activeHttpRequests.current.filter(
+                reqCtrl => reqCtrl !== httpAbortCtrl
+            );
+
+            if (!response.ok) {
+                throw new ServerError(responseData.message, response.status)
+            }
+
+            setIsLoading(false);
+            return responseData;
+
+        } catch (err) {
+            if (err instanceof ServerError) {
+                setError(err);
+                setIsLoading(false);
+                throw err;
+            }
         }
 
-        const result = await response.json();
-        setData(result);
-      } catch (err) {
-        setError(err as ServerError);
-      } finally {
-        setIsLoading(false);
-      }
+    }, []);
+
+    const clearError = () => {
+        setError(null);
     };
 
-    fetchData();
-  }, [url, options]);
+    useEffect(() => {
+        return () => {
+            activeHttpRequests.current.forEach(abortCtrl => abortCtrl.abort());
+        }
+    }, []);
 
-  return { data, error, isLoading };
+
+    return { isLoading, error, sendRequest, clearError };
 };

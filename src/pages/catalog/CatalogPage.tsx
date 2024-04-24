@@ -3,7 +3,7 @@ import { useNavigate, createSearchParams, useSearchParams } from 'react-router-d
 
 import { Facets, Game, Query } from '../../lib/types';
 import { convertToURLSearchParams } from '../../lib/Converters';
-import useGameApi from '../../lib/useGameApi';
+import useSearchGames from '../../api/Games/useSearchGames';
 
 import styles from './CatalogPage.module.css';
 
@@ -16,7 +16,7 @@ import CatalogPagination from "../../components/catalogPagination/CatalogPaginat
 const CatalogPage = (): JSX.Element => {
     const pageSize: number = 3;
 
-    const { searchGames } = useGameApi();
+    const { isLoading, error, fetchSearchGames, clearError } = useSearchGames();
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
@@ -39,14 +39,19 @@ const CatalogPage = (): JSX.Element => {
             search: `?${createSearchParams(convertToURLSearchParams(query))}`
         });
 
-        searchGames(query.title, query.discount, query.sortBy, query.pageNumber, query.pageSize, query.facets)
-            .then(data => {
+        const loadSearchGames = async () => {
+            const data = await fetchSearchGames(query.title, query.discount, query.sortBy, query.pageNumber, query.pageSize, query.facets);
+
+            if(data) {
                 setGames(data.results);
                 setFacets(data.facets);
                 setNumberOfResults(data.totalResults)
-            });
+            }
+        }
 
-    }, [query]);
+        loadSearchGames();
+
+    }, [query, fetchSearchGames]);
 
     return (
         <>

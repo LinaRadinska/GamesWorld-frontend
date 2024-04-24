@@ -1,15 +1,30 @@
 import { useEffect, useState } from "react";
+
 import { Game } from "../../lib/types";
+
+import useGetUpcomingGames from "../../api/Games/useGetUpcomingGames";
+
+import GameCardItem from "./gameCardItem/GameCardItem";
 
 import styles from './GameCardList.module.css';
 
-import GameCardItem from "./gameCardItem/GameCardItem";
-import useGameApi from "../../lib/useGameApi";
-
 
 const GameCardList = (): JSX.Element => {
-    const { useGetUpcomingGames } = useGameApi();
-    const {data, error, isLoading} = useGetUpcomingGames();
+    const { isLoading, error, fetchUpcomingGames, clearError } = useGetUpcomingGames();
+    const [upcomingGames, setUpcomingGames] = useState<Game[]>([]);
+
+    useEffect(() => {
+        
+        const loadUpcomingGames = async () => {
+            
+            const data = await fetchUpcomingGames();
+            
+            setUpcomingGames(data?.games);
+        }
+
+        loadUpcomingGames();
+
+    }, [fetchUpcomingGames])
 
 
     return (
@@ -19,7 +34,7 @@ const GameCardList = (): JSX.Element => {
                     Upcoming Games
                 </div>
                 <div className={styles.productsWidgetCards}>
-                    {data?.games.map((game) => (
+                    {upcomingGames?.map((game) => (
                         <GameCardItem key={game.id} game={game} />
                     ))}
                 </div>
